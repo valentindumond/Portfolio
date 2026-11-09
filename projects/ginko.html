@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ginko GTFS Explorer — Projet</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+</head>
+<body>
+    <canvas id="bgCanvas" aria-hidden="true"></canvas>
+    <header>
+        <nav class="navbar">
+        <h1 class="logo">DUMOND<span class="dot">.</span>dev</h1>
+        <ul class="nav-links">
+            <li><a href="../index.html#projects">Projets</a></li>
+            <li><a href="../index.html#contact">Contact</a></li>
+        </ul>
+        </nav>
+    </header>
+
+    <section class="project-page">
+        <div class="container column">
+        <h2>Ginko GTFS Explorer — Serveur Node.js</h2>
+
+        <p class="project-intro">
+            Serveur web Node.js / Express qui lit les données ouvertes <strong>GTFS</strong> du réseau de bus et tram
+            <strong>Ginko</strong> de Besançon et les affiche sous forme de pages HTML générées avec Pug.
+            Projet réalisé dans le cadre du cours de développement web de L3 Informatique (semestre 5),
+            à partir d'une base fournie par l'enseignant.
+        </p>
+
+        <h3>Fonctionnalités principales</h3>
+        <ul>
+            <li>Lecture en flux (<code>readline</code>) des fichiers GTFS : lignes, voyages, calendrier, horaires et arrêts</li>
+            <li>Filtrage sur une liste de lignes choisies dans un fichier <code>.env</code></li>
+            <li>Construction en mémoire des lignes et de leurs directions, des voyages avec leurs horaires, et des stations avec leurs coordonnées GPS</li>
+            <li>Page <code>/lignes</code> : lignes du réseau avec leurs couleurs officielles et leurs directions</li>
+            <li>Page <code>/stations</code> : liste des stations par ordre alphabétique</li>
+            <li>Route <code>/routes</code> : données des lignes au format JSON</li>
+        </ul>
+
+        <h3>Aperçu du code</h3>
+        <p>
+            Les fichiers GTFS sont lus dans l'ordre, ligne par ligne, pour ne pas charger en mémoire
+            le fichier des horaires qui contient plus de 500 000 lignes.
+        </p>
+        <div class="project-screenshot">
+            <img src="../assets/img/ginko-code.png" alt="Structure du projet et extrait de gtfs-reader.js" style="width:100%; max-width:600px; border-radius:10px;">
+        </div>
+
+        <h3>Architecture</h3>
+        <ul>
+            <li><code>app.js</code> : configuration Express (moteur Pug, middlewares, routes, gestion des erreurs 404 et 500)</li>
+            <li><code>routers/</code> et <code>controllers/</code> : définition des URL et préparation des données pour les vues</li>
+            <li><code>middlewares/logger.js</code> : journal des requêtes reçues</li>
+            <li><code>utils/gtfs-reader.js</code> : lecture et indexation des fichiers GTFS</li>
+            <li><code>views/</code> : gabarits Pug</li>
+        </ul>
+
+        <h3>Compétences mises en œuvre</h3>
+        <ul>
+            <li>Node.js (modules ES), Express 5, Pug 3</li>
+            <li>Architecture MVC (routes, contrôleurs, vues, middlewares)</li>
+            <li>Lecture de gros fichiers en flux et structures de données en mémoire</li>
+            <li>Exploitation de données ouvertes (format GTFS)</li>
+        </ul>
+
+        <h3>Code source</h3>
+        <p>Le code est disponible sur GitHub :</p>
+        <a href="https://github.com/valentindumond/ginko-gtfs-explorer" class="cta">Voir sur GitHub</a>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <p>© 2026 Valentin DUMOND — Portfolio</p>
+    </footer>
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>

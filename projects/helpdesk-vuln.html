@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helpdesk vulnérable — Projet</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
+</head>
+<body>
+    <canvas id="bgCanvas" aria-hidden="true"></canvas>
+    <header>
+        <nav class="navbar">
+        <h1 class="logo">DUMOND<span class="dot">.</span>dev</h1>
+        <ul class="nav-links">
+            <li><a href="../index.html#projects">Projets</a></li>
+            <li><a href="../index.html#contact">Contact</a></li>
+        </ul>
+        </nav>
+    </header>
+
+    <section class="project-page">
+        <div class="container column">
+        <h2>Helpdesk vulnérable — Sécurité web</h2>
+
+        <p class="project-intro">
+            Application web de helpdesk (gestion de tickets d'assistance) construite <strong>volontairement vulnérable</strong>
+            pour pratiquer la sécurité web des deux côtés : attaquer, puis défendre.
+            Elle existe en deux versions : une version vulnérable contenant des failles classiques du Top 10 de l'OWASP,
+            et une version corrigée (branche <code>fixed</code>) où chaque faille est réparée.
+            Chaque faille est documentée dans un writeup selon le même plan : <strong>repérer → exploiter → corriger</strong>.
+        </p>
+
+        <h3>Failles couvertes</h3>
+        <ul>
+            <li><strong>Injection SQL</strong> sur la connexion et la recherche de tickets (A03 — Injection)</li>
+            <li><strong>XSS stocké</strong> dans les commentaires (A03 — Injection)</li>
+            <li><strong>IDOR</strong> : accès aux tickets des autres utilisateurs (A01 — Broken Access Control)</li>
+            <li><strong>Contrôle d'accès cassé</strong> sur la page admin (A01 — Broken Access Control)</li>
+            <li><strong>Session faible</strong> : cookie prévisible et falsifiable (A07 — Authentication Failures)</li>
+            <li><strong>Mots de passe en MD5</strong> sans sel (A02 — Cryptographic Failures)</li>
+        </ul>
+
+        <h3>Exemple : contourner la connexion</h3>
+        <p>
+            La requête de connexion est construite en concaténant l'email saisi dans une chaîne SQL.
+            En entrant <code>' OR 1=1 --</code> comme email, la vérification du mot de passe est mise en commentaire
+            et on se retrouve connecté en tant qu'administrateur, sans aucun mot de passe.
+        </p>
+        <div class="project-screenshot">
+            <img src="../assets/img/helpdesk-login.png" alt="Injection SQL dans le formulaire de connexion" style="width:100%; max-width:600px; border-radius:10px;">
+        </div>
+
+        <h3>Chaîne de failles</h3>
+        <p>
+            Les failles se combinent : un simple utilisateur accède à la page admin (contrôle d'accès cassé),
+            y récupère les hash MD5 de tous les comptes, puis retrouve les mots de passe en clair en quelques secondes.
+            La même erreur de concaténation SQL permet aussi d'afficher les tickets de tout le monde depuis la barre de recherche.
+        </p>
+        <div class="project-screenshot">
+            <img src="../assets/img/helpdesk-admin.png" alt="Page admin accessible par un simple utilisateur" style="width:100%; max-width:600px; border-radius:10px; margin-bottom:1rem;">
+            <img src="../assets/img/helpdesk-recherche.png" alt="Injection SQL dans la recherche de tickets" style="width:100%; max-width:600px; border-radius:10px;">
+        </div>
+
+        <h3>Corrections</h3>
+        <ul>
+            <li>Requêtes paramétrées via l'ORM Prisma, jamais de concaténation SQL</li>
+            <li>Jeton de session opaque et cookie <code>httpOnly</code>, <code>secure</code>, <code>sameSite</code></li>
+            <li>Vérification côté serveur du propriétaire du ticket et du rôle admin</li>
+            <li>Contenu échappé par React (pas de <code>dangerouslySetInnerHTML</code>)</li>
+            <li>Hachage lent et salé des mots de passe (bcrypt / Argon2)</li>
+        </ul>
+
+        <h3>Compétences mises en œuvre</h3>
+        <ul>
+            <li>Next.js (App Router), TypeScript, Prisma, SQLite</li>
+            <li>Sécurité web offensive : OWASP Top 10, exploitation de failles</li>
+            <li>Sécurité défensive : correction et bonnes pratiques</li>
+            <li>Rédaction d'un writeup technique</li>
+        </ul>
+
+        <p><em>⚠️ Application destinée à un usage local et éducatif uniquement.</em></p>
+
+        <h3>Code source</h3>
+        <p>Le code et le writeup complet sont disponibles sur GitHub :</p>
+        <a href="https://github.com/valentindumond/helpdesk-vuln" class="cta">Voir sur GitHub</a>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <p>© 2026 Valentin DUMOND — Portfolio</p>
+    </footer>
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>
